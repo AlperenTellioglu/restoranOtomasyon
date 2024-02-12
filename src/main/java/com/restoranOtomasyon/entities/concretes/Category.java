@@ -28,8 +28,8 @@ public class Category {
 	private int categoryId;
 	
 	@Column(name = "name")
-	private String name;
+	private String categoryName;
 	
 	@OneToMany(mappedBy = "category")
-	private List<Product> products;
+	private List<Menu> menus;
 }

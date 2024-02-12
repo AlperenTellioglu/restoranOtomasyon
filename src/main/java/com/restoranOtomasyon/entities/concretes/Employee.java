@@ -35,6 +35,15 @@ public class Employee {
 	@Column(name = "employee_position")
 	private String position;
 	
+	@Column(name = "user_id")
+	private String userId;
+	
+	@Column(name = "passwords")
+	private String password;
+	
+	@Column(name = "account_type")
+	private String accountType;
+	
 	@Column(name = "start_date")
 	private LocalDateTime startDate;
 }
