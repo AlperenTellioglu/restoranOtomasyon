@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,9 +26,7 @@ public class CashRegister {
 	@Column(name = "id")
 	private int cashRegisterId;
 	
-	@Column(name = "total_income")
-	private int totalIncome;
-	
-	@Column(name = "total_expense")
-	private int totalExpense;
+	@OneToOne
+	@JoinColumn(name = "order_id")
+	private Order order;
 }

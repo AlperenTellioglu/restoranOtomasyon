@@ -37,8 +37,8 @@ public class OrderDetail {
 	private Order order;
 	
 	@ManyToOne
-	@JoinColumn(name = "pruduct_id")
-	private Product product;
+	@JoinColumn(name = "menu_id")
+	private Menu menu;
 	
 	
 }
