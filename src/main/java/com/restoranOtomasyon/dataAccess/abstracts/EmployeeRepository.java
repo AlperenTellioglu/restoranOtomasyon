@@ -6,4 +6,5 @@ import com.restoranOtomasyon.entities.concretes.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
 
+	Employee findByUserId(String userId);
 }
