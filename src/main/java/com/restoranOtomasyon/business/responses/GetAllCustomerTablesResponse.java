@@ -15,7 +15,7 @@ public class GetAllCustomerTablesResponse {
 	
 	private int tableNumber;
 	
-	private String status;
+	private boolean status;
 	
 	private Order order;
 }

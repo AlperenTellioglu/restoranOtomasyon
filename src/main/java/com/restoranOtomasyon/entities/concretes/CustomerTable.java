@@ -30,7 +30,7 @@ public class CustomerTable {
 	private String tableNumber;
 	
 	@Column(name = "table_status")
-	private String status;
+	private boolean status;
 	
 	@OneToOne
     @JoinColumn(name = "order_id")
