@@ -28,7 +28,7 @@ public class CustomerTable {
 	private int tableId;
 	
 	@Column(name = "table_number")
-	private String tableNumber;
+	private int tableNumber;
 	
 	@Column(name = "table_status")
 	private boolean status;
