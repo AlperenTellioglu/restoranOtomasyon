@@ -19,5 +19,5 @@ public class GetAllMenusResponse {
 	
 	private String ingredients;
 	
-	private int categoryName;
+	private String categoryName;
 }

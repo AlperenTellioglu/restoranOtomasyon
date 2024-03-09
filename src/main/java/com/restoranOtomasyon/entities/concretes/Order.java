@@ -36,7 +36,7 @@ public class Order {
 	@Column(name = "order_status")
 	private String status;
 	
-	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+	@OneToOne
     private CustomerTable customerTable;
 	
 	@OneToMany(mappedBy = "order")

@@ -1,5 +1,6 @@
 package com.restoranOtomasyon.entities.concretes;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +33,7 @@ public class CustomerTable {
 	@Column(name = "table_status")
 	private boolean status;
 	
-	@OneToOne
+	@OneToOne(mappedBy = "customerTable", cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
 	private Order order;
 }
