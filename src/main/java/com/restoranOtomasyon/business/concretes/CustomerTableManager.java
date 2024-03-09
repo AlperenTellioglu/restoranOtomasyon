@@ -3,6 +3,7 @@ package com.restoranOtomasyon.business.concretes;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.restoranOtomasyon.business.abstracts.CustomerTableService;
@@ -29,7 +30,7 @@ public class CustomerTableManager implements CustomerTableService {
 	@Override
 	public List<GetAllCustomerTablesResponse> getAllTables() {
 		
-		List<CustomerTable> tables = customerTableRepository.findAll();
+		List<CustomerTable> tables = customerTableRepository.findAll(Sort.by(Sort.Direction.ASC, "tableNumber"));
 		
 		List<GetAllCustomerTablesResponse> tablesResponse = tables.stream()
 				.map(table ->this.modelMapperService.forResponse()
