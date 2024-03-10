@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +32,9 @@ public class CustomerTable {
 	@Column(name = "table_number")
 	private int tableNumber;
 	
-	@Column(name = "table_status")
+	@NotNull
+	@NotBlank
+	@Column(name = "table_status", columnDefinition = "boolean default false")
 	private boolean status;
 	
 	@OneToOne(mappedBy = "customerTable", cascade = CascadeType.ALL)
