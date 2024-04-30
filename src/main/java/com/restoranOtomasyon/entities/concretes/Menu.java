@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,4 +42,7 @@ public class Menu {
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
+	
+	@OneToOne
+	private OrderDetail orderDetail;
 }

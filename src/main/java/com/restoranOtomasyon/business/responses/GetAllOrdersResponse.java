@@ -18,7 +18,7 @@ public class GetAllOrdersResponse {
 	
 	private String status;
 	
-	private GetAllCustomerTablesResponse customerTable;
+	//private GetAllCustomerTablesResponse customerTable;
 	
 	private List<GetAllOrderDetailsResponse> orderDetails;
 }

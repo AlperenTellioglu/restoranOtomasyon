@@ -36,8 +36,8 @@ public class Order {
 	@Column(name = "order_status")
 	private String status;
 	
-	@OneToOne
-    private CustomerTable customerTable;
+//	@OneToOne
+//    private CustomerTable customerTable;
 	
 	@OneToMany(mappedBy = "order")
 	private List<OrderDetail> orderDetails;

@@ -11,9 +11,7 @@ public class CreateOrderDetailRequest {
 
 	private int quantity;
 	
-	private double totalPrice;
-	
 	private int orderId;
 	
-	private int productId;
+	private int menuId;
 }

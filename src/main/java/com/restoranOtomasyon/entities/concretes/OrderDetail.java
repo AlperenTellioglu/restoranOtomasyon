@@ -1,5 +1,6 @@
 package com.restoranOtomasyon.entities.concretes;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,13 +34,16 @@ public class OrderDetail {
 	@Column(name = "total_price")
 	private double totalPrice;
 	
-	@ManyToOne
+	@Column(name = "unitPrice")
+	private double unitPrice;
+	
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "order_id")
 	private Order order;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "menu_id")
 	private Menu menu;
 	
-	
+	 
 }

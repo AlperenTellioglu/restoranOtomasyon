@@ -15,7 +15,9 @@ public class GetAllOrderDetailsResponse {
 	
 	private double totalPrice;
 	
-	private GetAllOrdersResponse orders;
+	private double unitPrice;
 	
-	private GetAllMenusResponse menus;
+	private int orderId;
+	
+	private String menuName;
 }
