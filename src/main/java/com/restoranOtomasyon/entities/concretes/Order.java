@@ -1,16 +1,14 @@
 package com.restoranOtomasyon.entities.concretes;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,9 +34,15 @@ public class Order {
 	@Column(name = "order_status")
 	private String status;
 	
-//	@OneToOne
-//    private CustomerTable customerTable;
+	@Column(name = "table_id")
+    private int tableId;
 	
-	@OneToMany(mappedBy = "order")
-	private List<OrderDetail> orderDetails;
+	@Column(name = "table_number")
+	private int tableNumber;
+	
+	@Column(name = "order_detail_id")
+	private List<Integer> orderDetails;
+	
+	@Column(name = "total_price")
+	private double totalPrice;
 }

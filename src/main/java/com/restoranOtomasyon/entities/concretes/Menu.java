@@ -43,6 +43,4 @@ public class Menu {
 	@JoinColumn(name = "category_id")
 	private Category category;
 	
-	@OneToOne
-	private OrderDetail orderDetail;
 }

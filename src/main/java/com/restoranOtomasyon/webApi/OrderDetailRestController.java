@@ -1,18 +1,22 @@
 package com.restoranOtomasyon.webApi;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restoranOtomasyon.business.abstracts.OrderDetailService;
 import com.restoranOtomasyon.business.requests.CreateOrderDetailRequest;
 import com.restoranOtomasyon.business.responses.GetAllOrderDetailsResponse;
+import com.restoranOtomasyon.dataAccess.abstracts.MenuRepository;
+import com.restoranOtomasyon.dataAccess.abstracts.OrderDetailRepository;
+import com.restoranOtomasyon.dataAccess.abstracts.OrderRepository;
+import com.restoranOtomasyon.entities.concretes.Menu;
+import com.restoranOtomasyon.entities.concretes.Order;
+import com.restoranOtomasyon.entities.concretes.OrderDetail;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -20,6 +24,9 @@ import lombok.AllArgsConstructor;
 public class OrderDetailRestController {
 
 	private OrderDetailService orderDetailService;
+	private OrderRepository orderRepository;
+	private MenuRepository menuRepository;
+	private OrderDetailRepository orderDetailRepository;
 	
 	@GetMapping("/orderDetails")
 	public List<GetAllOrderDetailsResponse> getAll() {
@@ -27,10 +34,35 @@ public class OrderDetailRestController {
 		return orderDetailService.getAllOrderDetails();
 	}
 	
-	@PostMapping("/createOrderDetail")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public void add(@RequestBody CreateOrderDetailRequest createOrderDetailRequest) {
+	@PostMapping("/createOrderDetails")
+	public void add(CreateOrderDetailRequest orderDetailRequest) {
+		OrderDetail orderDetail = new OrderDetail();
 		
-		this.orderDetailService.add(createOrderDetailRequest);
+		Order order = orderRepository.findById(orderDetailRequest.getOrderId())
+				.orElseThrow(() -> new RuntimeException("Siparis bulunamadı"));
+		
+		orderDetail.setOrderId(order.getOrderId());
+		
+		if (order.getOrderDetails() == null) {
+		    order.setOrderDetails(new ArrayList<>());
+		}
+		order.getOrderDetails().add(orderDetail.getOrderDetailId());
+
+		
+		Menu menu = menuRepository.findById(orderDetailRequest.getMenuId())
+				.orElseThrow();
+		
+		
+		orderDetail.setMenuId(menu.getMenuId());
+		orderDetail.setQuantity(orderDetailRequest.getQuantity());
+		orderDetail.setUnitPrice(menu.getPrice());
+		orderDetail.setMenuName(menu.getMenuName());
+		orderDetail.setTotalPrice(menu.getPrice()* orderDetail.getQuantity());
+		
+		order.setTotalPrice(orderDetail.getTotalPrice()+ order.getTotalPrice());
+		
+		this.orderDetailRepository.save(orderDetail);
+		this.orderRepository.save(order);
+		
 	}
 }

@@ -37,7 +37,4 @@ public class CustomerTable {
 	@Column(name = "table_status", columnDefinition = "boolean default false")
 	private boolean status;
 	
-//	@OneToOne(mappedBy = "customerTable", cascade = CascadeType.ALL)
-//    @JoinColumn(name = "order_id")
-//	private Order order;
 }

@@ -1,5 +1,6 @@
 package com.restoranOtomasyon.business.concretes;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +10,9 @@ import com.restoranOtomasyon.business.abstracts.OrderService;
 import com.restoranOtomasyon.business.requests.CreateOrderRequest;
 import com.restoranOtomasyon.business.responses.GetAllOrdersResponse;
 import com.restoranOtomasyon.core.utilities.mappers.ModelMapperService;
+import com.restoranOtomasyon.dataAccess.abstracts.CustomerTableRepository;
 import com.restoranOtomasyon.dataAccess.abstracts.OrderRepository;
+import com.restoranOtomasyon.entities.concretes.CustomerTable;
 import com.restoranOtomasyon.entities.concretes.Order;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +22,7 @@ import lombok.AllArgsConstructor;
 public class OrderManager implements OrderService{
 
 	private OrderRepository orderRepository;
+	private CustomerTableRepository customerTableRepository;
 	private ModelMapperService modelMapperService;
 	
 	@Override
@@ -31,13 +35,22 @@ public class OrderManager implements OrderService{
 		
 		return ordersResponse;
 	}
-	@Override
-	public void add(CreateOrderRequest createOrderRequest) {
-		Order order = this.modelMapperService.forRequest().map(createOrderRequest, Order.class);
-		
-		this.orderRepository.save(order);
-		
-	}
-	
-	
+//	@Override
+//	public void add(CreateOrderRequest createOrderRequest) {
+//		CustomerTable table = customerTableRepository.findById(createOrderRequest.getTableId())
+//				.orElseThrow(() -> new RuntimeException("Masa bulunamadı"));
+//		
+//		Order order = new Order();
+//		order.setTable(table);
+//		order.setOrderDate(LocalDateTime.now());
+//		order.setStatus("Hazırlanıyor");
+//		
+//		this.orderRepository.save(order);
+//		
+//	}
+//	
+//	@Override
+//	public Order addOrder(Order order) {
+//		return this.orderRepository.save(order);
+//	}
 }
