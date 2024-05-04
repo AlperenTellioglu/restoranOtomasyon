@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetByOrderStatusResponse {
 
+	private int orderId;
+	
 	private int tableNumber;
+	
 	private String status;
 }
