@@ -10,6 +10,6 @@ import com.restoranOtomasyon.entities.concretes.CustomerTable;
 @Repository
 public interface CustomerTableRepository extends JpaRepository<CustomerTable, Integer>{
 
-	List<CustomerTable> findByStatus(boolean status);
+	//List<CustomerTable> findByStatus(boolean status);
 
 }

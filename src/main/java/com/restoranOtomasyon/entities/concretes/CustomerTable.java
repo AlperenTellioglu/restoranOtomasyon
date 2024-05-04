@@ -34,7 +34,7 @@ public class CustomerTable {
 	
 	@NotNull
 	@NotBlank
-	@Column(name = "table_status", columnDefinition = "boolean default false")
-	private boolean status;
+	@Column(name = "table_status", columnDefinition = "VARCHAR(255) DEFAULT 'BOŞ'")
+	private String status;
 	
 }

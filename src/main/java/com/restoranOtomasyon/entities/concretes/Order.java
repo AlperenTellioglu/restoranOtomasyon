@@ -45,4 +45,9 @@ public class Order {
 	
 	@Column(name = "total_price")
 	private double totalPrice;
+	
+	@Column(name = "total_expense")
+	private double totalExpense;
+	
+	
 }

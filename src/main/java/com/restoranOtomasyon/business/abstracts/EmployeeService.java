@@ -5,4 +5,5 @@ import com.restoranOtomasyon.entities.concretes.Employee;
 public interface EmployeeService {
 	public boolean isValidEmployee(String username, String password);
 	public Employee getEmployeeByUserid(String userId);
+	Employee getEmployeeByUseridAndPassword(String userId, String password);
 }

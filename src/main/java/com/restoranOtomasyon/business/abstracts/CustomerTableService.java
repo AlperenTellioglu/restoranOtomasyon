@@ -6,6 +6,6 @@ import com.restoranOtomasyon.business.responses.GetAllCustomerTablesResponse;
 
 public interface CustomerTableService {
 
-	public boolean isEmptyTable(boolean status);
+	//public boolean isEmptyTable(boolean status);
 	List<GetAllCustomerTablesResponse> getAllTables();
 }

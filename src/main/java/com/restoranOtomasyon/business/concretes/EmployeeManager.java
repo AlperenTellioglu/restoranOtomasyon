@@ -26,6 +26,13 @@ public class EmployeeManager implements EmployeeService{
 		return employee != null && employee.getPassword().equals(password);
 	}
 
-	
+	@Override
+    public Employee getEmployeeByUseridAndPassword(String userId, String password) {
+        Employee employee = getEmployeeByUserid(userId);
+        if (employee != null && employee.getPassword().equals(password)) {
+            return employee;
+        }
+        return null;
+    }
 
 }

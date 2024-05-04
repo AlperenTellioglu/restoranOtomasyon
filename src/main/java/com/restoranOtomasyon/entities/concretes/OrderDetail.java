@@ -41,5 +41,11 @@ public class OrderDetail {
 	
 	@Column(name = "menu_name")
 	private String menuName;
+	
+	@Column(name = "order_note")
+	private String orderNote;
+	
+	@Column(name = "expense")
+	private double expense;
 
 }

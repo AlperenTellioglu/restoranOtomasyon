@@ -14,4 +14,6 @@ public class CreateOrderDetailRequest {
 	private int orderId;
 	
 	private int menuId;
+	
+	private String orderNote;
 }

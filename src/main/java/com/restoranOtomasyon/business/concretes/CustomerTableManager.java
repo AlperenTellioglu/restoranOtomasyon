@@ -21,11 +21,11 @@ public class CustomerTableManager implements CustomerTableService {
 	private CustomerTableRepository customerTableRepository;
 	private ModelMapperService modelMapperService;
 
-	@Override
-	public boolean isEmptyTable(boolean status) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+//	@Override
+//	public boolean isEmptyTable(boolean status) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
 
 	@Override
 	public List<GetAllCustomerTablesResponse> getAllTables() {

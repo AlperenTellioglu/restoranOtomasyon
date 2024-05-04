@@ -7,12 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetAllCustomerTablesResponse {
+public class GetByOrderStatusResponse {
 
-	private int id;
-	
 	private int tableNumber;
-	
 	private String status;
-	
 }

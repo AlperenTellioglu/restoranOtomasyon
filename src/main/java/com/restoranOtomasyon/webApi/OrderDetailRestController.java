@@ -58,8 +58,12 @@ public class OrderDetailRestController {
 		orderDetail.setUnitPrice(menu.getPrice());
 		orderDetail.setMenuName(menu.getMenuName());
 		orderDetail.setTotalPrice(menu.getPrice()* orderDetail.getQuantity());
+		orderDetail.setExpense(menu.getExpense() * orderDetail.getQuantity());
 		
 		order.setTotalPrice(orderDetail.getTotalPrice()+ order.getTotalPrice());
+		order.setTotalExpense(orderDetail.getExpense() + order.getTotalExpense());
+		
+		orderDetail.setOrderNote(orderDetailRequest.getOrderNote());
 		
 		this.orderDetailRepository.save(orderDetail);
 		this.orderRepository.save(order);
