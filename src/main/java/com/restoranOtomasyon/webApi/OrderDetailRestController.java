@@ -63,7 +63,13 @@ public class OrderDetailRestController {
 		order.setTotalPrice(orderDetail.getTotalPrice()+ order.getTotalPrice());
 		order.setTotalExpense(orderDetail.getExpense() + order.getTotalExpense());
 		
-		orderDetail.setOrderNote(orderDetailRequest.getOrderNote());
+		if(orderDetailRequest.getOrderNote().equals("string")) {
+			orderDetail.setOrderNote("Not yok");
+		}
+		else {
+			orderDetail.setOrderNote(orderDetailRequest.getOrderNote());
+		}
+		
 		
 		this.orderDetailRepository.save(orderDetail);
 		this.orderRepository.save(order);
