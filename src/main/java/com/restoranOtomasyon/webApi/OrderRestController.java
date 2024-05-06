@@ -5,19 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restoranOtomasyon.business.abstracts.OrderService;
 import com.restoranOtomasyon.business.requests.ChanceOrderStatusRequest;
-import com.restoranOtomasyon.business.requests.ConfrimOrderRequest;
 import com.restoranOtomasyon.business.requests.CreateOrderRequest;
-import com.restoranOtomasyon.business.responses.GetAllCustomerTablesResponse;
 import com.restoranOtomasyon.business.responses.GetAllOrdersResponse;
 import com.restoranOtomasyon.business.responses.GetByOrderStatusResponse;
 import com.restoranOtomasyon.business.responses.GetByTableNubmerOrderResponse;
@@ -30,8 +27,6 @@ import com.restoranOtomasyon.entities.concretes.CustomerTable;
 import com.restoranOtomasyon.entities.concretes.Order;
 import com.restoranOtomasyon.entities.concretes.OrderDetail;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -88,7 +83,7 @@ public class OrderRestController {
 	@GetMapping("/getOrdersByStatus")
 	public List<GetByOrderStatusResponse> getOrdersByStatus() {
 
-		List<Order> orders = orderRepository.findAll();
+		List<Order> orders = orderRepository.findAll(Sort.by(Sort.Direction.DESC, "orderId"));
 		
 		List<GetByOrderStatusResponse> statusResponse = orders.stream()
 				.map(order -> this.modelMapperService.forResponse()
@@ -115,7 +110,14 @@ public class OrderRestController {
 		Order order = orderRepository.findById(chanceRequest.getOrderId())
 				.orElseThrow();
 		
-		order.setStatus("gosterme");
+		if(order.getStatus().equals("iptal")) {
+			order.setStatus("gosterme");
+		}
+		
+		else if(order.getStatus().equals("onaylandi")) {
+			order.setStatus("gostermeonay");
+		}
+		
 		
 		this.orderRepository.save(order);
 		
@@ -144,23 +146,26 @@ public class OrderRestController {
 	}
 	
 	@GetMapping("/orders/{tableId}")
-    public ResponseEntity<List<GetOrdersForTable>> getOrdersForTable(@PathVariable int tableId) {
-        List<Order> orders = orderRepository.findByTableId(tableId);
-        
-        List<GetOrdersForTable> orderResponses = new ArrayList<GetOrdersForTable>();
-        
-        for(Order order : orders) {
-        	GetOrdersForTable orderResponse = new GetOrdersForTable();
-        	orderResponse.setOrderId(order.getOrderId());
-        	orderResponse.setTableId(order.getTableId());
-        	List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getOrderId());
-        	orderResponse.setOrderDetails(orderDetails);
-        	orderResponses.add(orderResponse);
-        }
-        
-        
-        return ResponseEntity.ok(orderResponses);
-    }
+	public ResponseEntity<List<GetOrdersForTable>> getOrdersForTable(@PathVariable int tableId) {
+	    List<Order> orders = orderRepository.findByTableId(tableId);
+	    
+	    List<GetOrdersForTable> orderResponses = new ArrayList<GetOrdersForTable>();
+	    
+	    for(Order order : orders) {
+	        GetOrdersForTable orderResponse = new GetOrdersForTable();
+	        orderResponse.setOrderId(order.getOrderId());
+	        orderResponse.setTableId(order.getTableId());
+	        orderResponse.setTotalPrice(order.getTotalPrice());
+	        orderResponse.setTotalExpense(order.getTotalExpense());
+	        orderResponse.setStatus(order.getStatus());
+	        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getOrderId());
+	        orderResponse.setOrderDetails(orderDetails);        
+	        
+	        orderResponses.add(orderResponse);
+	    }
+	    
+	    return ResponseEntity.ok(orderResponses);
+	}
 	
 	
 

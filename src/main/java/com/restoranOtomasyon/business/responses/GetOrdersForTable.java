@@ -17,5 +17,11 @@ public class GetOrdersForTable {
 	
 	private int tableId;
 	
+	private String status;
+	
+	private double totalPrice;
+	
+	private double totalExpense;
+	
 	private List<OrderDetail> orderDetails;
 }

@@ -14,27 +14,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="income_and_expense")
+@Table(name = "daily_profit")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IncomeAndExpense {
+public class DailyProfit {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
-	private int ieId;
+	@Column(name = "id")
+	private int id;
 	
-	@Column(name="income")
-	private double income;
-	
-	@Column(name="expense")
+	@Column(name = "expense")
 	private double expense;
 	
-	@Column(name="profit")
+	@Column(name = "income")
+	private double income;
+	
+	@Column(name = "profit")
 	private double profit;
 	
-	@Column(name="date")
+	@Column(name = "date")
 	private LocalDate date;
 }
