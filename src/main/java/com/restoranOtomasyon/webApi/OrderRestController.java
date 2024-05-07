@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restoranOtomasyon.business.abstracts.OrderService;
@@ -165,6 +167,25 @@ public class OrderRestController {
 	    }
 	    
 	    return ResponseEntity.ok(orderResponses);
+	}
+	
+	@PutMapping("/move/all")
+	public ResponseEntity<String> moveAllOrdersToTable(@RequestParam int sourceTableId, @RequestParam int targetTableId) {
+	    List<Order> orders = orderRepository.findByTableId(sourceTableId);
+	    CustomerTable customerTable = customerTableRepository.findById(targetTableId)
+	    		.orElseThrow();
+	    if (!orders.isEmpty()) {
+	        for (Order order : orders) {
+	            order.setTableId(customerTable.getTableId());
+	            order.setTableNumber(customerTable.getTableNumber());
+	            orderRepository.save(order);
+	        }
+	        customerTable.setStatus("DOLU");
+	        customerTableRepository.save(customerTable);
+	        return ResponseEntity.ok("All orders moved successfully to table " + targetTableId);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
 	
 	
