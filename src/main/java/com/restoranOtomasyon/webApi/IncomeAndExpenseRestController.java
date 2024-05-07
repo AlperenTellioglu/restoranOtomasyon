@@ -1,6 +1,8 @@
 package com.restoranOtomasyon.webApi;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.restoranOtomasyon.business.requests.CreateIncomeAndExpenseRequest;
 import com.restoranOtomasyon.dataAccess.abstracts.DailyProfitRepository;
 import com.restoranOtomasyon.dataAccess.abstracts.IncomeAndExpenseRepository;
+import com.restoranOtomasyon.dataAccess.abstracts.MonthlyProfitRepository;
 import com.restoranOtomasyon.entities.concretes.DailyProfit;
 import com.restoranOtomasyon.entities.concretes.IncomeAndExpense;
+import com.restoranOtomasyon.entities.concretes.MonthlyProfit;
 
 import lombok.AllArgsConstructor;
 
@@ -21,6 +25,8 @@ public class IncomeAndExpenseRestController {
 	private IncomeAndExpenseRepository ieRepository;
 
 	private DailyProfitRepository dailyProfitRepository;
+
+	private MonthlyProfitRepository monthlyProfitRepository;
 
 	@PostMapping("/createIncomeAndExpense")
 	public void add(CreateIncomeAndExpenseRequest request) {
@@ -50,6 +56,31 @@ public class IncomeAndExpenseRestController {
 
 		} else {
 			dailyProfitRepository.save(dailyProfitEntry);
+		}
+
+		YearMonth thisMonth = YearMonth.now();
+		List<DailyProfit> dailyProfitsThisMonth = dailyProfitRepository.findByDateBetween(thisMonth.atDay(1),
+				thisMonth.atEndOfMonth());
+		double totalIncomeThisMonth = dailyProfitsThisMonth.stream().mapToDouble(DailyProfit::getIncome).sum();
+		double totalExpenseThisMonth = dailyProfitsThisMonth.stream().mapToDouble(DailyProfit::getExpense).sum();
+		double monthlyProfitThisMonth = totalIncomeThisMonth - totalExpenseThisMonth;
+
+		Optional<MonthlyProfit> existingMonthlyProfit = monthlyProfitRepository.findByMonth(thisMonth);
+		if (existingMonthlyProfit.isPresent()) {
+			MonthlyProfit existing = existingMonthlyProfit.get();
+			if (!dailyProfitsThisMonth.isEmpty() && existing.getProfit() != monthlyProfitThisMonth) {
+				existing.setIncome(totalIncomeThisMonth);
+				existing.setExpense(totalExpenseThisMonth);
+				existing.setProfit(monthlyProfitThisMonth);
+				monthlyProfitRepository.save(existing);
+			}
+		} else {
+			MonthlyProfit monthlyProfitEntry = new MonthlyProfit();
+			monthlyProfitEntry.setMonth(thisMonth);
+			monthlyProfitEntry.setExpense(totalExpenseThisMonth);
+			monthlyProfitEntry.setIncome(totalIncomeThisMonth);
+			monthlyProfitEntry.setProfit(monthlyProfitThisMonth);
+			monthlyProfitRepository.save(monthlyProfitEntry);
 		}
 
 	}
