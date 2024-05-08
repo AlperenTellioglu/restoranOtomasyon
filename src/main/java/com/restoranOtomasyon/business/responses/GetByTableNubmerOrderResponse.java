@@ -14,4 +14,6 @@ public class GetByTableNubmerOrderResponse {
 	private int tableId;
 	
 	private int tableNumber;
+	
+	private String status;
 }
