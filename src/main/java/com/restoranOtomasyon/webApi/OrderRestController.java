@@ -123,8 +123,27 @@ public class OrderRestController {
 		Order order = orderRepository.findById(chanceRequest.getOrderId()).orElseThrow();
 
 		order.setStatus("iptal");
-
+		
 		this.orderRepository.save(order);
+		
+		List<Order> orders = orderRepository.findByTableId(order.getTableId());
+		
+		CustomerTable table = customerTableRepository.findById(order.getTableId())
+				.orElseThrow();
+		
+		int count = 0;
+		
+		for(Order item : orders) {
+			if(!item.getStatus().equals("iptal")) {
+				count += 1;
+			}
+		}
+		
+		if(count == 0) {
+			table.setStatus("BOŞ");
+			this.customerTableRepository.save(table);
+		}
+		
 
 	}
 
