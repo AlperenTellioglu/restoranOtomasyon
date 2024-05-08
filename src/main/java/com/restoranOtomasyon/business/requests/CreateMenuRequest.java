@@ -21,5 +21,9 @@ public class CreateMenuRequest {
 	
 	@NotNull
 	@NotBlank
+	private double expense;
+	
+	@NotNull
+	@NotBlank
 	private int categoryId;
 }

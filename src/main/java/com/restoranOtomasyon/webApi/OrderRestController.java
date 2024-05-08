@@ -43,151 +43,157 @@ public class OrderRestController {
 
 	@GetMapping("/orders")
 	public List<GetAllOrdersResponse> getAll() {
-		
+
 		return orderService.getAllOrders();
 	}
-	
-//	@PostMapping("/create")
-//    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-//        Order createdOrder = orderService.addOrder(order);
-//        return ResponseEntity.ok(createdOrder);
-//	}
-//	
-//	@PostMapping("/createOrder")
-//	@ResponseStatus(code = HttpStatus.CREATED)
-//	public void add(@RequestBody @Valid CreateOrderRequest createOrderRequest) {
-//		this.orderService.add(createOrderRequest);
-//	}
-
 
 	@PostMapping("/createOrder")
 	public ResponseEntity<Integer> add(CreateOrderRequest orderRequest) {
-	    Order order = new Order();
-	    
-	    CustomerTable table = customerTableRepository.findById(orderRequest.getTableId())
-	            .orElseThrow();
-	    
-	    order.setTableId(table.getTableId());
-	    order.setTableNumber(table.getTableNumber());
-	    order.setTotalPrice(0);
-	    order.setTotalExpense(0);
-	    order.setOrderDate(LocalDateTime.now());
-	    order.setStatus("hazirlaniyor");
-	    
-	    table.setStatus("DOLU");
-	    
-	    this.customerTableRepository.save(table);
-	    this.orderRepository.save(order);
-	    
-	    return ResponseEntity.ok(order.getOrderId());
+		Order order = new Order();
+
+		CustomerTable table = customerTableRepository.findById(orderRequest.getTableId()).orElseThrow();
+
+		order.setTableId(table.getTableId());
+		order.setTableNumber(table.getTableNumber());
+		order.setTotalPrice(0);
+		order.setTotalExpense(0);
+		order.setOrderDate(LocalDateTime.now());
+		order.setStatus("hazirlaniyor");
+
+		table.setStatus("DOLU");
+
+		this.customerTableRepository.save(table);
+		this.orderRepository.save(order);
+
+		return ResponseEntity.ok(order.getOrderId());
 	}
-	
+
 	@GetMapping("/getOrdersByStatus")
 	public List<GetByOrderStatusResponse> getOrdersByStatus() {
 
 		List<Order> orders = orderRepository.findAll(Sort.by(Sort.Direction.DESC, "orderId"));
-		
+
 		List<GetByOrderStatusResponse> statusResponse = orders.stream()
-				.map(order -> this.modelMapperService.forResponse()
-						.map(order, GetByOrderStatusResponse.class)).collect(Collectors.toList());
-		
+				.map(order -> this.modelMapperService.forResponse().map(order, GetByOrderStatusResponse.class))
+				.collect(Collectors.toList());
+
 		return statusResponse;
-	} 
-	
-	
+	}
+
 	@GetMapping("/getByTableNumberOrder")
 	public List<GetByTableNubmerOrderResponse> getOrder() {
 		List<Order> orders = orderRepository.findAll();
-		
+
 		List<GetByTableNubmerOrderResponse> tableNoResponse = orders.stream()
-				.map(order -> this.modelMapperService.forResponse()
-						.map(order, GetByTableNubmerOrderResponse.class)).collect(Collectors.toList());
-		
+				.map(order -> this.modelMapperService.forResponse().map(order, GetByTableNubmerOrderResponse.class))
+				.collect(Collectors.toList());
+
 		return tableNoResponse;
-		
+
 	}
-	
+
 	@PostMapping("/dontShowOrder")
 	public void dontShowOrder(ChanceOrderStatusRequest chanceRequest) {
-		Order order = orderRepository.findById(chanceRequest.getOrderId())
-				.orElseThrow();
-		
-		if(order.getStatus().equals("iptal")) {
+		Order order = orderRepository.findById(chanceRequest.getOrderId()).orElseThrow();
+
+		if (order.getStatus().equals("iptal")) {
 			order.setStatus("gosterme");
 		}
-		
-		else if(order.getStatus().equals("onaylandi")) {
+
+		else if (order.getStatus().equals("onaylandi")) {
 			order.setStatus("gostermeonay");
 		}
-		
-		
+
 		this.orderRepository.save(order);
-		
+
 	}
-	
+
 	@PostMapping("/confrimOrder")
 	public void confrimOrder(ChanceOrderStatusRequest chanceRequest) {
-		Order order = orderRepository.findById(chanceRequest.getOrderId())
-				.orElseThrow();
-		
+		Order order = orderRepository.findById(chanceRequest.getOrderId()).orElseThrow();
+
 		order.setStatus("onaylandi");
-		
+
 		this.orderRepository.save(order);
-		
+
 	}
-	
+
 	@PostMapping("/cancelOrder")
 	public void cancelOrder(ChanceOrderStatusRequest chanceRequest) {
-		Order order = orderRepository.findById(chanceRequest.getOrderId())
-				.orElseThrow();
-		
+		Order order = orderRepository.findById(chanceRequest.getOrderId()).orElseThrow();
+
 		order.setStatus("iptal");
-		
+
 		this.orderRepository.save(order);
-		
+
 	}
-	
+
 	@GetMapping("/orders/{tableId}")
 	public ResponseEntity<List<GetOrdersForTable>> getOrdersForTable(@PathVariable int tableId) {
-	    List<Order> orders = orderRepository.findByTableId(tableId);
-	    
-	    List<GetOrdersForTable> orderResponses = new ArrayList<GetOrdersForTable>();
-	    
-	    for(Order order : orders) {
-	        GetOrdersForTable orderResponse = new GetOrdersForTable();
-	        orderResponse.setOrderId(order.getOrderId());
-	        orderResponse.setTableId(order.getTableId());
-	        orderResponse.setTotalPrice(order.getTotalPrice());
-	        orderResponse.setTotalExpense(order.getTotalExpense());
-	        orderResponse.setStatus(order.getStatus());
-	        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getOrderId());
-	        orderResponse.setOrderDetails(orderDetails);        
-	        
-	        orderResponses.add(orderResponse);
-	    }
-	    
-	    return ResponseEntity.ok(orderResponses);
+		List<Order> orders = orderRepository.findByTableId(tableId);
+
+		List<GetOrdersForTable> orderResponses = new ArrayList<GetOrdersForTable>();
+
+		for (Order order : orders) {
+			GetOrdersForTable orderResponse = new GetOrdersForTable();
+			orderResponse.setOrderId(order.getOrderId());
+			orderResponse.setTableId(order.getTableId());
+			orderResponse.setTotalPrice(order.getTotalPrice());
+			orderResponse.setTotalExpense(order.getTotalExpense());
+			orderResponse.setStatus(order.getStatus());
+			List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getOrderId());
+			orderResponse.setOrderDetails(orderDetails);
+
+			orderResponses.add(orderResponse);
+		}
+
+		return ResponseEntity.ok(orderResponses);
 	}
-	
+
 	@PutMapping("/move/all")
-	public ResponseEntity<String> moveAllOrdersToTable(@RequestParam int sourceTableId, @RequestParam int targetTableId) {
-	    List<Order> orders = orderRepository.findByTableId(sourceTableId);
-	    CustomerTable customerTable = customerTableRepository.findById(targetTableId)
-	    		.orElseThrow();
-	    if (!orders.isEmpty()) {
-	        for (Order order : orders) {
-	            order.setTableId(customerTable.getTableId());
-	            order.setTableNumber(customerTable.getTableNumber());
-	            orderRepository.save(order);
-	        }
-	        customerTable.setStatus("DOLU");
-	        customerTableRepository.save(customerTable);
-	        return ResponseEntity.ok("All orders moved successfully to table " + targetTableId);
-	    } else {
-	        return ResponseEntity.notFound().build();
-	    }
+	public ResponseEntity<String> moveAllOrdersToTable(@RequestParam int sourceTableId,
+			@RequestParam int targetTableId) {
+		List<Order> orders = orderRepository.findByTableId(sourceTableId);
+		CustomerTable customerTable = customerTableRepository.findById(targetTableId).orElseThrow();
+		CustomerTable customerTable2 = customerTableRepository.findById(sourceTableId).orElseThrow();
+		if (!orders.isEmpty()) {
+			for (Order order : orders) {
+				order.setTableId(customerTable.getTableId());
+				order.setTableNumber(customerTable.getTableNumber());
+				orderRepository.save(order);
+			}
+			customerTable.setStatus("DOLU");
+			customerTable2.setStatus("BOŞ");
+			customerTableRepository.save(customerTable);
+			customerTableRepository.save(customerTable2);
+			return ResponseEntity.ok("All orders moved successfully to table " + targetTableId);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
-	
-	
+
+	@PutMapping("/combineTables")
+	public ResponseEntity<String> combineTables(@RequestParam int sourceTableId, @RequestParam int targetTableId) {
+		List<Order> orders = orderRepository.findByTableId(sourceTableId);
+		CustomerTable customerTable = customerTableRepository.findById(targetTableId).orElseThrow();
+		CustomerTable customerTable2 = customerTableRepository.findById(sourceTableId).orElseThrow();
+
+		if (!orders.isEmpty()) {
+			for (Order order : orders) {
+				order.setTableId(customerTable.getTableId());
+				order.setTableNumber(customerTable.getTableNumber());
+				orderRepository.save(order);
+			}
+			customerTable.setStatus("DOLU");
+			customerTable2.setStatus("BOŞ");
+			customerTableRepository.save(customerTable);
+			customerTableRepository.save(customerTable2);
+			return ResponseEntity.ok("All orders moved successfully to table " + targetTableId);
+		} else {
+			return ResponseEntity.notFound().build();
+
+		}
+
+	}
 
 }

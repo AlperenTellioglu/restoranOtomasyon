@@ -15,6 +15,8 @@ public class UpdateMenuRequest {
 	
 	private double price;
 	
+	private double expense;
+	
 	private int categoryId;
 
 }
