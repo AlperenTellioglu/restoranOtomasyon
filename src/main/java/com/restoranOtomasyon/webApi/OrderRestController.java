@@ -2,6 +2,8 @@ package com.restoranOtomasyon.webApi;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,14 +73,17 @@ public class OrderRestController {
 	@GetMapping("/getOrdersByStatus")
 	public List<GetByOrderStatusResponse> getOrdersByStatus() {
 
-		List<Order> orders = orderRepository.findAll(Sort.by(Sort.Direction.DESC, "orderId"));
+	    List<Order> orders = orderRepository.findAll();
 
-		List<GetByOrderStatusResponse> statusResponse = orders.stream()
-				.map(order -> this.modelMapperService.forResponse().map(order, GetByOrderStatusResponse.class))
-				.collect(Collectors.toList());
+	    List<GetByOrderStatusResponse> statusResponse = orders.stream()
+	            .sorted(Comparator.comparing(Order::getStatus, Comparator.reverseOrder()))
+	            .map(order -> modelMapperService.forResponse().map(order, GetByOrderStatusResponse.class))
+	            .collect(Collectors.toList());
 
-		return statusResponse;
+	    return statusResponse;
 	}
+
+
 
 	@GetMapping("/getByTableNumberOrder")
 	public List<GetByTableNubmerOrderResponse> getOrder() {
@@ -149,25 +154,34 @@ public class OrderRestController {
 
 	@GetMapping("/orders/{tableId}")
 	public ResponseEntity<List<GetOrdersForTable>> getOrdersForTable(@PathVariable int tableId) {
-		List<Order> orders = orderRepository.findByTableId(tableId);
+	    List<Order> orders = orderRepository.findByTableId(tableId);
 
-		List<GetOrdersForTable> orderResponses = new ArrayList<GetOrdersForTable>();
+	    List<GetOrdersForTable> orderResponses = new ArrayList<>();
 
-		for (Order order : orders) {
-			GetOrdersForTable orderResponse = new GetOrdersForTable();
-			orderResponse.setOrderId(order.getOrderId());
-			orderResponse.setTableId(order.getTableId());
-			orderResponse.setTotalPrice(order.getTotalPrice());
-			orderResponse.setTotalExpense(order.getTotalExpense());
-			orderResponse.setStatus(order.getStatus());
-			List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getOrderId());
-			orderResponse.setOrderDetails(orderDetails);
+	    for (Order order : orders) {
+	        GetOrdersForTable orderResponse = new GetOrdersForTable();
+	        orderResponse.setOrderId(order.getOrderId());
+	        orderResponse.setTableId(order.getTableId());
+	        orderResponse.setStatus(order.getStatus());
+	        
+	        List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(order.getOrderId());
+	        double totalPrice = orderDetails.stream()
+	                .mapToDouble(detail -> detail.getTotalPrice())
+	                .sum();
+	        double totalExpense = orderDetails.stream()
+	                .mapToDouble(detail -> detail.getExpense())
+	                .sum();
+	        
+	        orderResponse.setTotalPrice(totalPrice);
+	        orderResponse.setTotalExpense(totalExpense);
+	        orderResponse.setOrderDetails(orderDetails);
 
-			orderResponses.add(orderResponse);
-		}
+	        orderResponses.add(orderResponse);
+	    }
 
-		return ResponseEntity.ok(orderResponses);
+	    return ResponseEntity.ok(orderResponses);
 	}
+
 
 	@PutMapping("/move/all")
 	public ResponseEntity<String> moveAllOrdersToTable(@RequestParam int sourceTableId,

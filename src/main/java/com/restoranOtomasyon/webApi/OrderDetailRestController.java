@@ -60,19 +60,20 @@ public class OrderDetailRestController {
 		orderDetail.setTotalPrice(menu.getPrice()* orderDetail.getQuantity());
 		orderDetail.setExpense(menu.getExpense() * orderDetail.getQuantity());
 		
-		order.setTotalPrice(orderDetail.getTotalPrice()+ order.getTotalPrice());
-		order.setTotalExpense(orderDetail.getExpense() + order.getTotalExpense());
-		
-		if(orderDetailRequest.getOrderNote().equals("string")) {
+		if(orderDetailRequest.getOrderNote().equals("")) {
 			orderDetail.setOrderNote("Not yok");
 		}
 		else {
 			orderDetail.setOrderNote(orderDetailRequest.getOrderNote());
 		}
 		
-		
 		this.orderDetailRepository.save(orderDetail);
-		this.orderRepository.save(order);
+		
+//		order.setTotalPrice(orderDetail.getTotalPrice()+ order.getTotalPrice());
+//		order.setTotalExpense(orderDetail.getExpense() + order.getTotalExpense());
+//		
+//		
+//		this.orderRepository.save(order);
 		
 	}
 }
