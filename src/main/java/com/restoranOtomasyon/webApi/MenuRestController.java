@@ -5,14 +5,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.restoranOtomasyon.business.requests.ChanceOrderStatusRequest;
 import com.restoranOtomasyon.business.requests.CreateMenuRequest;
 import com.restoranOtomasyon.business.requests.UpdateMenuRequest;
 import com.restoranOtomasyon.dataAccess.abstracts.CategoryRepository;
 import com.restoranOtomasyon.dataAccess.abstracts.MenuRepository;
 import com.restoranOtomasyon.entities.concretes.Category;
 import com.restoranOtomasyon.entities.concretes.Menu;
-import com.restoranOtomasyon.entities.concretes.Order;
 
 import lombok.AllArgsConstructor;
 
