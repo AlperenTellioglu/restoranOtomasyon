@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.restoranOtomasyon.business.abstracts.CategoryService;
 import com.restoranOtomasyon.business.responses.GetAllCategoriesResponse;
 import com.restoranOtomasyon.business.responses.GetAllMenusResponse;
-import com.restoranOtomasyon.core.utilities.mappers.ModelMapperService;
 import com.restoranOtomasyon.dataAccess.abstracts.CategoryRepository;
 import com.restoranOtomasyon.entities.concretes.Category;
 
@@ -33,15 +32,16 @@ public class CategoryManager implements CategoryService{
 			responseItem.setName(category.getCategoryName());
 			
 			List<GetAllMenusResponse> menuResponseList = category.getMenus().stream()
-					.map(menu -> {
-						GetAllMenusResponse menuResponse = new GetAllMenusResponse();
-						menuResponse.setId(menu.getMenuId());
-						menuResponse.setName(menu.getMenuName());
-						menuResponse.setPrice(menu.getPrice());
-						menuResponse.setExpense(menu.getExpense());
-						menuResponse.setCategoryName(menu.getCategory().getCategoryName());
-						return menuResponse;
-					}).collect(Collectors.toList());
+				    .filter(menu -> !"gosterme".equals(menu.getMenuStatus()))
+				    .map(menu -> {
+				        GetAllMenusResponse menuResponse = new GetAllMenusResponse();
+				        menuResponse.setId(menu.getMenuId());
+				        menuResponse.setName(menu.getMenuName());
+				        menuResponse.setPrice(menu.getPrice());
+				        menuResponse.setExpense(menu.getExpense());
+				        menuResponse.setStatus(menu.getMenuStatus());
+				        return menuResponse;
+				    }).collect(Collectors.toList());
 			
 				responseItem.setMenus(menuResponseList);
 				categoryResponseList.add(responseItem);

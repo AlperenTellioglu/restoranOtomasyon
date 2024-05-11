@@ -35,11 +35,10 @@ public class Menu {
 	@Column(name = "expense")
 	private double expense;
 	
-	@Column(name = "ingredients")
-	private String ingredients;
-	
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category category;
-	
+
+	@Column(name = "status")
+	private String menuStatus;
 }

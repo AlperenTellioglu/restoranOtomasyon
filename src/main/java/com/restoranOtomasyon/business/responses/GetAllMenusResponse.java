@@ -17,7 +17,5 @@ public class GetAllMenusResponse {
 	
 	private double expense;
 	
-	private String ingredients;
-	
-	private String categoryName;
+	private String status;
 }
