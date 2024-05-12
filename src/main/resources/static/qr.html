@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-5">QR Code</h2>
+        <canvas id="qrCanvas" class="mx-auto"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrious/dist/qrious.min.js"></script>
+    <script>
+        const ipAddress = window.location.hostname;
+
+        // Sayfa yüklendiğinde QR kod oluşturma işlemi
+        document.addEventListener('DOMContentLoaded', () => {
+            const qrCodeText = `http://${ipAddress}:8080`;
+            const qrCanvas = document.getElementById('qrCanvas');
+            new QRious({
+                element: qrCanvas,
+                value: qrCodeText,
+                size: 200
+            });
+        });
+    </script>
+</body>
+</html>
