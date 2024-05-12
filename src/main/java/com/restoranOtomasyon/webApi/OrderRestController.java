@@ -2,12 +2,10 @@ package com.restoranOtomasyon.webApi;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -172,7 +170,7 @@ public class OrderRestController {
 	                .mapToDouble(detail -> detail.getExpense())
 	                .sum();
 	        
-	        orderResponse.setTotalPrice(totalPrice);
+	        orderResponse.setTotalIncome(totalPrice);
 	        orderResponse.setTotalExpense(totalExpense);
 	        orderResponse.setOrderDetails(orderDetails);
 

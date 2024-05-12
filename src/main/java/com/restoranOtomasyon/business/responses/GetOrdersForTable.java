@@ -19,7 +19,7 @@ public class GetOrdersForTable {
 	
 	private String status;
 	
-	private double totalPrice;
+	private double totalIncome;
 	
 	private double totalExpense;
 	
