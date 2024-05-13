@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restoranOtomasyon.business.requests.CreateIncomeAndExpenseRequest;
@@ -29,13 +30,13 @@ public class IncomeAndExpenseRestController {
 	private MonthlyProfitRepository monthlyProfitRepository;
 
 	@PostMapping("/createIncomeAndExpense")
-	public void add(CreateIncomeAndExpenseRequest request) {
+	public void add(@RequestParam double income, @RequestParam double expense) {
 		IncomeAndExpense ie = new IncomeAndExpense();
 
 		ie.setDate(LocalDate.now());
-		ie.setExpense(request.getExpense());
-		ie.setIncome(request.getIncome());
-		ie.setProfit(request.getIncome() - request.getExpense());
+		ie.setExpense(expense);
+		ie.setIncome(income);
+		ie.setProfit(income - expense);
 
 		this.ieRepository.save(ie);
 
