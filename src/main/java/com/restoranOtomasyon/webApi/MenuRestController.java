@@ -74,9 +74,11 @@ public class MenuRestController {
 	
 	@DeleteMapping("/deleteMenu")
 	public void deleteMenu(int menuId) {
-		Menu menu = menuRepository.findById(menuId)
-				.orElseThrow();
-					
-		this.menuRepository.delete(menu);
+	    Menu menu = menuRepository.findById(menuId)
+	            .orElseThrow();
+
+
+	    this.menuRepository.delete(menu);
 	}
+
 }

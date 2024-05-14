@@ -18,7 +18,7 @@ public class QRMenuController {
 
 	CategoryService categoryService;
 	
-	@GetMapping
+	@GetMapping()
     public List<GetAllCategoriesResponse> getAllMenus() {
         return categoryService.getAllCategories();
     }
