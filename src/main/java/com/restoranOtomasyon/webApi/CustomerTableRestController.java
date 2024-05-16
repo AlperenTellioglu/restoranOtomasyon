@@ -2,11 +2,14 @@ package com.restoranOtomasyon.webApi;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restoranOtomasyon.business.abstracts.CustomerTableService;
+import com.restoranOtomasyon.business.requests.CreateCustomerTableRequest;
 import com.restoranOtomasyon.business.responses.GetAllCustomerTablesResponse;
 import com.restoranOtomasyon.dataAccess.abstracts.CustomerTableRepository;
 import com.restoranOtomasyon.dataAccess.abstracts.OrderDetailRepository;
@@ -50,4 +53,25 @@ public class CustomerTableRestController {
             this.customerTableRepository.save(customerTable);
         }
     }
+	
+	@PostMapping("/createTable")
+	public void addTable(CreateCustomerTableRequest tableRequest) {
+		CustomerTable table = new CustomerTable();
+		table.setTableNumber(tableRequest.getTableNumber());
+		table.setStatus("BOŞ");
+		
+		this.customerTableRepository.save(table);
+	}
+	
+	@DeleteMapping("/deleteTable")
+	public void deleteTable(@RequestParam int tableId) {
+		CustomerTable table = customerTableRepository.findById(tableId)
+				.orElseThrow();
+		
+		this.customerTableRepository.delete(table);
+	}
+	
+	
+	
+	
 }

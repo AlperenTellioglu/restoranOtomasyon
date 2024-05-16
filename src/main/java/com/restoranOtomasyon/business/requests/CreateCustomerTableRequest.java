@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateCustomerTableRequest {
 
-	private String tableNumber;
+	private int tableNumber;
 }

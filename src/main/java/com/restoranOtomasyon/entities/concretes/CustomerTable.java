@@ -29,8 +29,6 @@ public class CustomerTable {
 	@Column(name = "table_number")
 	private int tableNumber;
 	
-	@NotNull
-	@NotBlank
 	@Column(name = "table_status", columnDefinition = "VARCHAR(255) DEFAULT 'BOŞ'")
 	private String status;
 	

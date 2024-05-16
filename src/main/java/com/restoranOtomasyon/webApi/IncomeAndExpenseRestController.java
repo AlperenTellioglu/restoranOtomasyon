@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.restoranOtomasyon.business.requests.CreateIncomeAndExpenseRequest;
 import com.restoranOtomasyon.dataAccess.abstracts.DailyProfitRepository;
 import com.restoranOtomasyon.dataAccess.abstracts.IncomeAndExpenseRepository;
 import com.restoranOtomasyon.dataAccess.abstracts.MonthlyProfitRepository;
@@ -85,4 +84,8 @@ public class IncomeAndExpenseRestController {
 		}
 
 	}
+	
+	
+	
+	
 }
