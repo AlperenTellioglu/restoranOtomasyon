@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restoranOtomasyon.business.abstracts.CategoryService;
@@ -16,6 +15,7 @@ import com.restoranOtomasyon.business.responses.GetAllCategoriesResponse;
 import com.restoranOtomasyon.dataAccess.abstracts.CategoryRepository;
 import com.restoranOtomasyon.entities.concretes.Category;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -32,7 +32,7 @@ public class CategoryRestController {
 	}
 	
 	@PostMapping("/createCategory")
-	public void addCategory(CreateCategoryRequest categoryRequest) {
+	public void addCategory(@RequestBody CreateCategoryRequest categoryRequest) {
 		Category category = new Category();
 		
 		category.setCategoryName(categoryRequest.getName());

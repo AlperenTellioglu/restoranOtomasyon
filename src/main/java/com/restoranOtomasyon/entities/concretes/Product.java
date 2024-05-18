@@ -24,9 +24,6 @@ public class Product {
 	@Column(name = "id")
 	private int productId;
 	
-	@Column(name = "price")
-	private double price;
-	
 	@Column(name = "name")
 	private String productName;
 	

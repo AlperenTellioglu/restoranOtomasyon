@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,22 +12,33 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "waiter_notifications")
+@Table(name = "over_time_usage_amount")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WaiterNotification {
+public class OverTimeUsageAmount {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private int waiterNotificationId;
+	private int otuaId;
 	
-	@ManyToOne
-	@JoinColumn(name = "order_id")
-	private Order order;
+	@Column(name = "daily_usage_amount")
+	private double dailyUsageAmount;
 	
-	@Column(name = "waiter_notification_status")
-	private String status;
+	@Column(name = "weekly_usage_amount")
+	private double weeklyUsageAmount;
+	
+	@Column(name = "monthly_usage_amount")
+	private double monthlyUsageAmount;
+	
+	@Column(name = "product_name")
+	private String productName;
+	
+	@Column(name = "product_id")
+	private int productId;
+	
+	@Column(name = "product_quantity")
+	private double productQuantity;
 }
