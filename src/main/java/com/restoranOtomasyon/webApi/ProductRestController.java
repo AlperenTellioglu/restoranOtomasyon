@@ -41,7 +41,29 @@ public class ProductRestController {
 		return productsResponse;
 	}
 
-	@PostMapping("/updateProductQuantity")
+	@PostMapping("/increaseProductQuantity")
+	public void increaseProductQuantity(@RequestParam int productId, @RequestParam double amount) {
+		Product product = productRepository.findById(productId)
+				.orElseThrow();
+		
+		product.setQuantity(product.getQuantity() + amount);
+		productRepository.save(product);
+		
+		Optional<OverTimeUsageAmount> existingOverTimeUsageAmount = overTimeUsageAmountRepository
+				.findByProductId(productId);
+		OverTimeUsageAmount otua;
+		if(existingOverTimeUsageAmount.isPresent()) {
+			otua = existingOverTimeUsageAmount.get();
+			otua.setProductQuantity(product.getQuantity());
+			
+			this.overTimeUsageAmountRepository.save(otua);
+		}
+		
+		
+	}
+	
+	
+	@PostMapping("/reduceProductQuantity")
 	public void updateProductQuantity(@RequestParam int productId, @RequestParam double usageAmount) {
 
 		Product product = productRepository.findById(productId)
