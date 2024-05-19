@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restoranOtomasyon.business.abstracts.CategoryService;
-import com.restoranOtomasyon.business.responses.GetAllCategoriesResponse;
+import com.restoranOtomasyon.business.responses.GetAllCategoriesWithStatusResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -19,8 +19,8 @@ public class QRMenuController {
 	CategoryService categoryService;
 	
 	@GetMapping()
-    public List<GetAllCategoriesResponse> getAllMenus() {
-        return categoryService.getAllCategories();
+    public List<GetAllCategoriesWithStatusResponse> getAllMenus() {
+        return categoryService.getAllCategoriesWithStatus();
     }
 	
 }
