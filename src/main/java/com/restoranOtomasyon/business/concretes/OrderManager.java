@@ -1,18 +1,14 @@
 package com.restoranOtomasyon.business.concretes;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.restoranOtomasyon.business.abstracts.OrderService;
-import com.restoranOtomasyon.business.requests.CreateOrderRequest;
 import com.restoranOtomasyon.business.responses.GetAllOrdersResponse;
 import com.restoranOtomasyon.core.utilities.mappers.ModelMapperService;
-import com.restoranOtomasyon.dataAccess.abstracts.CustomerTableRepository;
 import com.restoranOtomasyon.dataAccess.abstracts.OrderRepository;
-import com.restoranOtomasyon.entities.concretes.CustomerTable;
 import com.restoranOtomasyon.entities.concretes.Order;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +18,6 @@ import lombok.AllArgsConstructor;
 public class OrderManager implements OrderService{
 
 	private OrderRepository orderRepository;
-	private CustomerTableRepository customerTableRepository;
 	private ModelMapperService modelMapperService;
 	
 	@Override

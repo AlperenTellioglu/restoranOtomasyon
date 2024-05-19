@@ -1,11 +1,17 @@
 package com.restoranOtomasyon.webApi;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.restoranOtomasyon.business.responses.GetAllProcutsResponse;
+import com.restoranOtomasyon.core.utilities.mappers.ModelMapperService;
 import com.restoranOtomasyon.dataAccess.abstracts.OTUARepository;
 import com.restoranOtomasyon.dataAccess.abstracts.ProductRepository;
 import com.restoranOtomasyon.dataAccess.abstracts.UsageAmountRepository;
@@ -19,49 +25,95 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ProductRestController {
 
-    private ProductRepository productRepository;
-    private UsageAmountRepository usageAmountRepository;
-    private OTUARepository overTimeUsageAmountRepository;
+	private ProductRepository productRepository;
+	private UsageAmountRepository usageAmountRepository;
+	private OTUARepository overTimeUsageAmountRepository;
+	private ModelMapperService modelMapperService;
 
-    @PostMapping("/updateProductQuantity")
-    public void updateProductQuantity(@RequestParam int productId, @RequestParam double usageAmount) {
+	@GetMapping("/getProducts")
+	public List<GetAllProcutsResponse> getAllProducts() {
+		List<Product> products = productRepository.findAll();
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+		List<GetAllProcutsResponse> productsResponse = products.stream()
+				.map(product -> this.modelMapperService.forResponse()
+						.map(product, GetAllProcutsResponse.class)).collect(Collectors.toList());
 
-        product.setQuantity(product.getQuantity() - usageAmount);
-        productRepository.save(product);
+		return productsResponse;
+	}
 
-        Optional<UsageAmount> existingUsageAmount = usageAmountRepository.findByProductId(product.getProductId());
-        UsageAmount usageAmount2;
-        if (existingUsageAmount.isPresent()) {
-            usageAmount2 = existingUsageAmount.get();
-            usageAmount2.setNumberOfDays(usageAmount2.getNumberOfDays() + 1);
-            usageAmount2.setUsageAmount(usageAmount2.getUsageAmount() + usageAmount);
-        } else {
-            usageAmount2 = new UsageAmount();
-            usageAmount2.setNumberOfDays(1);
-            usageAmount2.setUsageAmount(usageAmount);
-            usageAmount2.setProductId(product.getProductId());
-        }
-        usageAmountRepository.save(usageAmount2);
+	@PostMapping("/updateProductQuantity")
+	public void updateProductQuantity(@RequestParam int productId, @RequestParam double usageAmount) {
 
-        Optional<OverTimeUsageAmount> existingOverTimeUsageAmount = overTimeUsageAmountRepository.findByProductId(productId);
-        OverTimeUsageAmount otua;
-        if (existingOverTimeUsageAmount.isPresent()) {
-            otua = existingOverTimeUsageAmount.get();
-        } else {
-            otua = new OverTimeUsageAmount();
-            otua.setProductId(product.getProductId());
-            otua.setProductName(product.getProductName());
-            otua.setProductQuantity(product.getQuantity());
-        }
+		Product product = productRepository.findById(productId)
+				.orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
-        otua.setDailyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays());
-        otua.setWeeklyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays() * 7);
-        otua.setMonthlyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays() * 30);
-        otua.setProductQuantity(product.getQuantity());
+		product.setQuantity(product.getQuantity() - usageAmount);
+		productRepository.save(product);
 
-        overTimeUsageAmountRepository.save(otua);
-    }
+		Optional<UsageAmount> existingUsageAmount = usageAmountRepository.findByProductId(product.getProductId());
+		UsageAmount usageAmount2;
+		if (existingUsageAmount.isPresent()) {
+			usageAmount2 = existingUsageAmount.get();
+			usageAmount2.setNumberOfDays(usageAmount2.getNumberOfDays() + 1);
+			usageAmount2.setUsageAmount(usageAmount2.getUsageAmount() + usageAmount);
+		} else {
+			usageAmount2 = new UsageAmount();
+			usageAmount2.setNumberOfDays(1);
+			usageAmount2.setUsageAmount(usageAmount);
+			usageAmount2.setProductId(product.getProductId());
+		}
+		usageAmountRepository.save(usageAmount2);
+
+		Optional<OverTimeUsageAmount> existingOverTimeUsageAmount = overTimeUsageAmountRepository
+				.findByProductId(productId);
+		OverTimeUsageAmount otua;
+		if (existingOverTimeUsageAmount.isPresent()) {
+			otua = existingOverTimeUsageAmount.get();
+		} else {
+			otua = new OverTimeUsageAmount();
+			otua.setProductId(product.getProductId());
+			otua.setProductName(product.getProductName());
+			otua.setProductQuantity(product.getQuantity());
+		}
+
+		otua.setDailyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays());
+		otua.setWeeklyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays() * 7);
+		otua.setMonthlyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays() * 30);
+		otua.setProductQuantity(product.getQuantity());
+
+		overTimeUsageAmountRepository.save(otua);
+	}
+	
+	@PostMapping("/createProduct")
+	public void addProduct(@RequestParam String productName, @RequestParam double quantity) {
+		Product product = new Product();
+		
+		product.setProductName(productName);
+		product.setQuantity(quantity);
+		
+		this.productRepository.save(product);
+	}
+	
+	@DeleteMapping("/deleteProduct")
+	public void deleteProduct(@RequestParam int productId) {
+		
+		UsageAmount ua = usageAmountRepository.findByProductId(productId)
+				.orElseThrow();
+		
+		this.usageAmountRepository.delete(ua);
+		
+		OverTimeUsageAmount otua = overTimeUsageAmountRepository.findByProductId(productId)
+				.orElseThrow();
+		
+		this.overTimeUsageAmountRepository.delete(otua);
+		
+		Product product = productRepository.findById(productId)
+				.orElseThrow();
+		
+		this.productRepository.delete(product);
+	}
+	
+	
+	
+	
 }
