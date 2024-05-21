@@ -102,6 +102,7 @@ public class ProductRestController {
 		otua.setWeeklyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays() * 7);
 		otua.setMonthlyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays() * 30);
 		otua.setProductQuantity(product.getQuantity());
+		otua.setEstEndDay((int) (otua.getProductQuantity() / otua.getDailyUsageAmount()));
 
 		overTimeUsageAmountRepository.save(otua);
 	}

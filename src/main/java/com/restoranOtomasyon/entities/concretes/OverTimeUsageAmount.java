@@ -41,4 +41,7 @@ public class OverTimeUsageAmount {
 	
 	@Column(name = "product_quantity")
 	private double productQuantity;
+	
+	@Column(name = "est_end_day")
+	private int estEndDay;
 }
