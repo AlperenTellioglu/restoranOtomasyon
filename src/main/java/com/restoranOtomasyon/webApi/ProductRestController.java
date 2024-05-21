@@ -119,22 +119,20 @@ public class ProductRestController {
 	
 	@DeleteMapping("/deleteProduct")
 	public void deleteProduct(@RequestParam int productId) {
-		
-		UsageAmount ua = usageAmountRepository.findByProductId(productId)
-				.orElseThrow();
-		
-		this.usageAmountRepository.delete(ua);
-		
-		OverTimeUsageAmount otua = overTimeUsageAmountRepository.findByProductId(productId)
-				.orElseThrow();
-		
-		this.overTimeUsageAmountRepository.delete(otua);
-		
-		Product product = productRepository.findById(productId)
-				.orElseThrow();
-		
-		this.productRepository.delete(product);
+	    
+	    usageAmountRepository.findByProductId(productId)
+	            .ifPresent(ua -> this.usageAmountRepository.delete(ua));
+	    
+	    overTimeUsageAmountRepository.findByProductId(productId)
+	            .ifPresent(otua -> this.overTimeUsageAmountRepository.delete(otua));
+	    
+	    
+	    Product product = productRepository.findById(productId)
+	            .orElseThrow();
+	    
+	    this.productRepository.delete(product);
 	}
+
 	
 	
 	
