@@ -97,7 +97,8 @@ public class ProductRestController {
 			otua.setProductName(product.getProductName());
 			otua.setProductQuantity(product.getQuantity());
 		}
-
+		
+		
 		otua.setDailyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays());
 		otua.setWeeklyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays() * 7);
 		otua.setMonthlyUsageAmount(usageAmount2.getUsageAmount() / usageAmount2.getNumberOfDays() * 30);
@@ -115,6 +116,17 @@ public class ProductRestController {
 		product.setQuantity(quantity);
 		
 		this.productRepository.save(product);
+		
+		OverTimeUsageAmount otua = new OverTimeUsageAmount();
+		otua.setProductId(product.getProductId());
+		otua.setProductName(product.getProductName());
+		otua.setDailyUsageAmount(0);
+		otua.setEstEndDay(0);
+		otua.setMonthlyUsageAmount(0);
+		otua.setProductQuantity(product.getQuantity());
+		otua.setWeeklyUsageAmount(0);
+		
+		this.overTimeUsageAmountRepository.save(otua);
 	}
 	
 	@DeleteMapping("/deleteProduct")
@@ -132,9 +144,6 @@ public class ProductRestController {
 	    
 	    this.productRepository.delete(product);
 	}
-
-	
-	
 	
 	
 }
