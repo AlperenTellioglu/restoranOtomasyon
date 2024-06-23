@@ -23,12 +23,15 @@ public class OverTimeUsageAmountRestController {
 	
 	@GetMapping("/getProductsWithUsageAmount")
 	public List<GetProductsWithUAResponse> getProductsWithUA() {
-		List<OverTimeUsageAmount> otuas = otuaRepository.findAll();
+	    List<OverTimeUsageAmount> otuas = otuaRepository.findAll();
 
-		List<GetProductsWithUAResponse> otuaResponse = otuas.stream()
-				.map(otua -> this.modelMapperService.forResponse()
-						.map(otua, GetProductsWithUAResponse.class)).collect(Collectors.toList());
+	    List<GetProductsWithUAResponse> otuaResponse = otuas.stream()
+	            .sorted((otua1, otua2) -> otua1.getProductName().compareToIgnoreCase(otua2.getProductName()))
+	            .map(otua -> this.modelMapperService.forResponse()
+	                    .map(otua, GetProductsWithUAResponse.class))
+	            .collect(Collectors.toList());
 
-		return otuaResponse;
+	    return otuaResponse;
 	}
+
 }

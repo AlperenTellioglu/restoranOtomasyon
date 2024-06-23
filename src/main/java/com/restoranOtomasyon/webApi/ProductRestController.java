@@ -43,24 +43,50 @@ public class ProductRestController {
 
 	@PostMapping("/increaseProductQuantity")
 	public void increaseProductQuantity(@RequestParam int productId, @RequestParam double amount) {
-		Product product = productRepository.findById(productId)
-				.orElseThrow();
-		
-		product.setQuantity(product.getQuantity() + amount);
-		productRepository.save(product);
-		
-		Optional<OverTimeUsageAmount> existingOverTimeUsageAmount = overTimeUsageAmountRepository
-				.findByProductId(productId);
-		OverTimeUsageAmount otua;
-		if(existingOverTimeUsageAmount.isPresent()) {
-			otua = existingOverTimeUsageAmount.get();
-			otua.setProductQuantity(product.getQuantity());
-			
-			this.overTimeUsageAmountRepository.save(otua);
-		}
-		
-		
+	    Product product = productRepository.findById(productId)
+	            .orElseThrow();
+
+	    product.setQuantity(product.getQuantity() + amount);
+	    productRepository.save(product);
+
+	    Optional<UsageAmount> existingUsageAmount = usageAmountRepository.findByProductId(product.getProductId());
+	    UsageAmount usageAmount2;
+	    if (existingUsageAmount.isPresent()) {
+	        usageAmount2 = existingUsageAmount.get();
+	    } else {
+	        usageAmount2 = new UsageAmount();
+	        usageAmount2.setNumberOfDays(1); // Yeni ürün için başlangıç değeri
+	        usageAmount2.setUsageAmount(0); // Yeni ürün için başlangıç değeri
+	        usageAmount2.setProductId(product.getProductId());
+	    }
+	    usageAmountRepository.save(usageAmount2);
+
+	    Optional<OverTimeUsageAmount> existingOverTimeUsageAmount = overTimeUsageAmountRepository.findByProductId(productId);
+	    OverTimeUsageAmount otua;
+	    if (existingOverTimeUsageAmount.isPresent()) {
+	        otua = existingOverTimeUsageAmount.get();
+	    } else {
+	        otua = new OverTimeUsageAmount();
+	        otua.setProductId(product.getProductId());
+	        otua.setProductName(product.getProductName());
+	    }
+
+	    int numberOfDays = usageAmount2.getNumberOfDays();
+	    double totalUsageAmount = usageAmount2.getUsageAmount();
+
+	    double dailyUsageAmount = numberOfDays == 0 ? 0 : totalUsageAmount / numberOfDays;
+	    otua.setDailyUsageAmount(dailyUsageAmount);
+	    otua.setWeeklyUsageAmount(dailyUsageAmount * 7);
+	    otua.setMonthlyUsageAmount(dailyUsageAmount * 30);
+	    otua.setProductQuantity(product.getQuantity());
+	    otua.setEstEndDay(dailyUsageAmount == 0 ? 0 : (int) (otua.getProductQuantity() / dailyUsageAmount));
+
+	    overTimeUsageAmountRepository.save(otua);
 	}
+
+
+
+
 	
 	
 	@PostMapping("/reduceProductQuantity")
